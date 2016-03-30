@@ -1,9 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.print.*;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import javax.swing.JTabbedPane;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -18,7 +23,13 @@ import javax.swing.AbstractListModel;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Formatter;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
 
 public class Interface extends JFrame {
 
@@ -27,12 +38,18 @@ public class Interface extends JFrame {
 	private JTextField nameText;
 	private JTextField addressText;
 	private JTextField districtText;
-	private JTextField textStartHoliday;
 	private JTextField textEndHoliday;
 
 	/**
 	 * Launch the application.
 	 */
+	//Table table = new Table("Subscriptions");
+	
+	ArrayList<String> row1 = new ArrayList<String>();
+	ArrayList<String> row2 = new ArrayList<String>();
+	ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+	
+	
 	public static void main(String[] args) {
 
 		// OnHoliday Check @ load to see if people are still on holidays
@@ -47,15 +64,21 @@ public class Interface extends JFrame {
 		 * 
 		 * =====================================================================
 		 */
+		
+		
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Interface frame = new Interface();
 					frame.setVisible(true);
+					
+					
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
 			}
 		});
 	}
@@ -64,8 +87,33 @@ public class Interface extends JFrame {
 	 * Create the frame. *
 	 */
 	public Interface() {
+		
+		
+		row1.add("0");
+		row1.add("Peter Parker");
+		row1.add("123 Main St");
+		row1.add("7");
+		row1.add("true");
+		row1.add("Whenever");
+		row1.add("six billion dollars");
+		row1.add("0010");
+		row1.add("nada");
+		
+		row2.add("1");
+		row2.add("Jhon Doe");
+		row2.add("321 Main St");
+		row2.add("12");
+		row2.add("false");
+		row2.add("Whenever");
+		row2.add("six hundred billion dollars");
+		row2.add("1001");
+		row2.add("nada");
+		
+		table.add(row1);
+		table.add(row2);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 464, 355);
+		setBounds(100, 100, 513, 389);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -85,14 +133,6 @@ public class Interface extends JFrame {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Reports", null, panel, null);
 		panel.setLayout(null);
-
-		/*----------------------------------------------
-		 * Last Printed Date
-		 ----------------------------------------------*/
-
-		JLabel lastPrinted = new JLabel("Last Printed: 1969-04-20");
-		lastPrinted.setBounds(10, 11, 170, 14);
-		panel.add(lastPrinted);
 		
 		/*----------------------------------------------
 		 * Status Text Area for Reports + label
@@ -103,9 +143,10 @@ public class Interface extends JFrame {
 		panel.add(lblLog);
 
 		JTextPane txtpnStatus = new JTextPane();
+		txtpnStatus.setFont(new Font("Courier New", Font.PLAIN, 11));
 		txtpnStatus.setEditable(false);
 		txtpnStatus.setText("log lol");
-		txtpnStatus.setBounds(10, 70, 413, 198);
+		txtpnStatus.setBounds(10, 70, 462, 232);
 		panel.add(txtpnStatus);
 		
 
@@ -115,7 +156,7 @@ public class Interface extends JFrame {
 		
 		JComboBox mnuReport = new JComboBox();
 		mnuReport.setModel(new DefaultComboBoxModel(new String[] {"Delivery Report", "Delivery Summary", "Customer Bills"}));
-		mnuReport.setBounds(190, 8, 134, 20);
+		mnuReport.setBounds(10, 8, 145, 20);
 		panel.add(mnuReport);
 		
 
@@ -126,14 +167,63 @@ public class Interface extends JFrame {
 		JButton btnPrint = new JButton("Display");
 		btnPrint.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
-
-				String s = null;
+						
+				//String s = table.get(0).toString();
+				String s = table.get(0).get(1);
+				//String s = null;
 				
 				 if(mnuReport.getSelectedIndex() == 0){
-				 	s = "Delivery Report";
+					 
+					 txtpnStatus.setText("Dist  Address             Name                Publications");
+					 
+					 for(int x=0; x<table.size(); x++){
+						 
+						 System.out.print("");
+						 
+						 String name = table.get(x).get(1);
+						 String address = table.get(x).get(2);
+						 String distID = table.get(x).get(3);
+						 String pubs = table.get(x).get(7);
+						 
+						 String output = "";
+						 int nameWht = 20;
+						 int addWht = 20;
+						 
+						 if(distID.length() == 1){
+							 output = output + (" " + distID + "    ");
+						 }else{
+							 output = output + (distID + "    ");
+						 }
+						 
+						 output = output + (address);
+						 
+						 addWht = 20 - address.length();
+						 
+						 for(int y = addWht; y>0; y--){
+							 output = output + (" ");
+						 }
+						 
+						 output = output + name;
+						 
+						 nameWht = 20 - name.length();
+						 
+						 for(int y = nameWht; y>0; y--){
+							 output = output + (" ");
+						 }
+						 						 						 
+						 output = output + (pubs);
+						 
+						 System.out.print(output + " halp ");
+						
+						 txtpnStatus.setText(txtpnStatus.getText() + "\n" + output);
+						 
+						 
+					 }
+					 		        		
+				 	//s = "Delivery Report";
 				 	//Get all customers by district
 				 	//(name, address, district, publications)
+				 	//s = (table.get(0) + "\n" + table.get(1));
 				 }
 				 if(mnuReport.getSelectedIndex() == 1){
 				 	s= "Delivery Summary";
@@ -147,11 +237,11 @@ public class Interface extends JFrame {
 				 }
 				
 				// txtpnStatus.setText(s + Search results);
-				  txtpnStatus.setText(s);
+				  //txtpnStatus.setText(s);
 				
 			}
 		});
-		btnPrint.setBounds(334, 7, 89, 23);
+		btnPrint.setBounds(218, 7, 89, 23);
 		panel.add(btnPrint);
 
 		/*
@@ -172,7 +262,7 @@ public class Interface extends JFrame {
 
 		searchText = new JTextField();
 		searchText.setText("search");
-		searchText.setBounds(10, 11, 189, 20);
+		searchText.setBounds(10, 11, 221, 20);
 		panel_1.add(searchText);
 		searchText.setColumns(10);
 
@@ -182,15 +272,38 @@ public class Interface extends JFrame {
 
 		JComboBox searchingBy = new JComboBox();
 		searchingBy.setModel(new DefaultComboBoxModel(new String[] {"Customer Name", "Customer ID", "Address", "Publication", "District", "On Holiday", "Billing Date"}));
-		searchingBy.setBounds(209, 11, 101, 20);
+		searchingBy.setBounds(241, 11, 132, 20);
 		panel_1.add(searchingBy);
 
+		/*----------------------------------------------
+		 * List for the results of the search
+		 ----------------------------------------------*/
+
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 42, 462, 260);
+		panel_1.add(scrollPane);
+		
+				JList listResults = new JList();
+				scrollPane.setViewportView(listResults);
+				listResults.setModel(new AbstractListModel() {
+					String[] values = new String[] { "customer 1", "customer 2" };
+
+					public int getSize() {
+						return values.length;
+					}
+
+					public Object getElementAt(int index) {
+						return values[index];
+					}
+				});
+		
+		
 		/*----------------------------------------------
 		 * Search Button
 		 ----------------------------------------------*/
 
 		JButton btnSearch = new JButton("Search");
-		btnSearch.setBounds(320, 10, 89, 23);
+		btnSearch.setBounds(383, 10, 89, 23);
 		panel_1.add(btnSearch);
 		
 		btnSearch.addActionListener(new ActionListener() {
@@ -201,6 +314,19 @@ public class Interface extends JFrame {
 				 }
 				 if(searchingBy.getSelectedIndex() == 1){
 				 	//search by Customer ID
+					// ArrayList<ArrayList<String>> fields;
+					 
+					 
+					 //ArrayList<String> temp = table.search(0, searchText.getText());
+					 
+					/* String result = null;
+					 
+					 while(!temp.isEmpty()){
+						 result.concat(temp.get(0) + " ");
+						 temp.remove(0);
+					 }*/
+					 listResults.setListData(table.toArray());
+					 
 				 }
 				 if(searchingBy.getSelectedIndex() == 2){
 				 	//search by Address
@@ -220,27 +346,8 @@ public class Interface extends JFrame {
 			}
 		});
 
-		/*----------------------------------------------
-		 * List for the results of the search
-		 ----------------------------------------------*/
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 42, 399, 171);
-		panel_1.add(scrollPane);
 
-		JList listResults = new JList();
-		listResults.setModel(new AbstractListModel() {
-			String[] values = new String[] { "customer 1", "customer 2" };
-
-			public int getSize() {
-				return values.length;
-			}
-
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		scrollPane.setViewportView(listResults);
 
 		/*
 		 * ===============================================
@@ -259,11 +366,11 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel customerID = new JLabel("Customer ID:");
-		customerID.setBounds(10, 11, 65, 14);
+		customerID.setBounds(10, 11, 103, 14);
 		panel_2.add(customerID);
 
 		JLabel idLabel = new JLabel("QQQQ");
-		idLabel.setBounds(86, 11, 46, 14);
+		idLabel.setBounds(123, 11, 46, 14);
 		panel_2.add(idLabel);
 
 		/*----------------------------------------------
@@ -271,12 +378,12 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel lblName = new JLabel("Name: ");
-		lblName.setBounds(10, 34, 46, 14);
+		lblName.setBounds(10, 34, 103, 14);
 		panel_2.add(lblName);
 
 		nameText = new JTextField();
 		nameText.setText("karalynn krause");
-		nameText.setBounds(86, 31, 128, 20);
+		nameText.setBounds(123, 31, 128, 20);
 		panel_2.add(nameText);
 		nameText.setColumns(10);
 
@@ -285,12 +392,12 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel lblAddress = new JLabel("Address: ");
-		lblAddress.setBounds(10, 59, 46, 14);
+		lblAddress.setBounds(10, 59, 103, 14);
 		panel_2.add(lblAddress);
 
 		addressText = new JTextField();
 		addressText.setText("218 Diefenbaker ");
-		addressText.setBounds(86, 56, 128, 20);
+		addressText.setBounds(123, 56, 128, 20);
 		panel_2.add(addressText);
 		addressText.setColumns(10);
 
@@ -299,12 +406,12 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel lblDistrictId = new JLabel("District ID:");
-		lblDistrictId.setBounds(10, 84, 56, 14);
+		lblDistrictId.setBounds(10, 84, 103, 14);
 		panel_2.add(lblDistrictId);
 
 		districtText = new JTextField();
 		districtText.setText("XX");
-		districtText.setBounds(86, 81, 128, 20);
+		districtText.setBounds(123, 81, 128, 20);
 		panel_2.add(districtText);
 		districtText.setColumns(10);
 
@@ -313,24 +420,22 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel lblOnHoliday = new JLabel("On Holiday: ");
-		lblOnHoliday.setBounds(10, 159, 65, 14);
+		lblOnHoliday.setBounds(10, 159, 107, 14);
 		panel_2.add(lblOnHoliday);
 		
 		
 
 		JCheckBox chckbxOnHoliday = new JCheckBox("");
 		chckbxOnHoliday.setVerticalAlignment(SwingConstants.BOTTOM);
-		chckbxOnHoliday.setBounds(86, 155, 34, 23);
+		chckbxOnHoliday.setBounds(123, 159, 34, 23);
 		panel_2.add(chckbxOnHoliday);
 		
 		chckbxOnHoliday.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(chckbxOnHoliday.isSelected()){
-					textStartHoliday.setEditable(true);
 					textEndHoliday.setEditable(true);
 				}
 				else{
-					textStartHoliday.setEditable(false);
 					textEndHoliday.setEditable(false);
 				}
 			}
@@ -342,27 +447,16 @@ public class Interface extends JFrame {
 
 		// Start
 
-		JLabel lblDuration = new JLabel("Duration:");
-		lblDuration.setBounds(10, 185, 56, 14);
+		JLabel lblDuration = new JLabel("End Date:");
+		lblDuration.setBounds(10, 185, 103, 14);
 		panel_2.add(lblDuration);
-
-		textStartHoliday = new JTextField();
-		textStartHoliday.setEditable(false);
-		textStartHoliday.setText("03-12");
-		textStartHoliday.setBounds(86, 182, 56, 20);
-		panel_2.add(textStartHoliday);
-		textStartHoliday.setColumns(10);
-
-		JLabel label = new JLabel("-");
-		label.setBounds(152, 185, 4, 14);
-		panel_2.add(label);
 
 		// End
 
 		textEndHoliday = new JTextField();
 		textEndHoliday.setEditable(false);
-		textEndHoliday.setText("03-17");
-		textEndHoliday.setBounds(162, 182, 52, 20);
+		textEndHoliday.setText("03-17-2016");
+		textEndHoliday.setBounds(123, 189, 128, 20);
 		panel_2.add(textEndHoliday);
 		textEndHoliday.setColumns(10);
 
@@ -371,11 +465,11 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel lblBillingName = new JLabel("Billing Date: ");
-		lblBillingName.setBounds(10, 109, 65, 14);
+		lblBillingName.setBounds(10, 109, 107, 14);
 		panel_2.add(lblBillingName);
 
-		JLabel lblBillingDate = new JLabel("02-20");
-		lblBillingDate.setBounds(86, 109, 46, 14);
+		JLabel lblBillingDate = new JLabel("02-20-2016");
+		lblBillingDate.setBounds(123, 109, 128, 14);
 		panel_2.add(lblBillingDate);
 
 		/*----------------------------------------------
@@ -383,11 +477,11 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel lblMonthlyTotal = new JLabel("Monthly Total:");
-		lblMonthlyTotal.setBounds(10, 134, 76, 14);
+		lblMonthlyTotal.setBounds(10, 134, 107, 14);
 		panel_2.add(lblMonthlyTotal);
 
 		JLabel lblTotalValue = new JLabel("$420.69");
-		lblTotalValue.setBounds(86, 134, 46, 14);
+		lblTotalValue.setBounds(123, 134, 128, 14);
 		panel_2.add(lblTotalValue);
 
 		/*----------------------------------------------
@@ -395,24 +489,24 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JLabel lblSubs = new JLabel("Subscriptions");
-		lblSubs.setBounds(298, 34, 76, 14);
+		lblSubs.setBounds(348, 54, 101, 14);
 		panel_2.add(lblSubs);
 
-		JCheckBox chckbxTrumpWeekly = new JCheckBox("Trump Weekly");
-		chckbxTrumpWeekly.setBounds(277, 105, 97, 23);
-		panel_2.add(chckbxTrumpWeekly);
+		JCheckBox chckbxP3 = new JCheckBox("Trump Weekly");
+		chckbxP3.setBounds(327, 125, 122, 23);
+		panel_2.add(chckbxP3);
 
-		JCheckBox chckbxRevolutionMonthly = new JCheckBox("Bernie");
-		chckbxRevolutionMonthly.setBounds(277, 80, 65, 23);
-		panel_2.add(chckbxRevolutionMonthly);
+		JCheckBox chckbxP2 = new JCheckBox("Bernie");
+		chckbxP2.setBounds(327, 100, 122, 23);
+		panel_2.add(chckbxP2);
 
-		JCheckBox chckbxQwerty = new JCheckBox("QWERTY");
-		chckbxQwerty.setBounds(277, 55, 97, 23);
-		panel_2.add(chckbxQwerty);
+		JCheckBox chckbxP1 = new JCheckBox("QWERTY");
+		chckbxP1.setBounds(327, 75, 122, 23);
+		panel_2.add(chckbxP1);
 
-		JCheckBox chckbxMLP = new JCheckBox("MLP Gaming");
-		chckbxMLP.setBounds(277, 130, 97, 23);
-		panel_2.add(chckbxMLP);
+		JCheckBox chckbxP4 = new JCheckBox("MLP Gaming");
+		chckbxP4.setBounds(327, 150, 122, 23);
+		panel_2.add(chckbxP4);
 
 		/*
 		 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
@@ -423,24 +517,24 @@ public class Interface extends JFrame {
 		int btws = 0;
 		double totalCost = 0;
 
-		if (chckbxTrumpWeekly.isSelected()) {
+		if (chckbxP3.isSelected()) {
 			btws += 1;
 			// Get monthly amount for this publication
 			// totalCost += result;
 
 		}
-		if (chckbxRevolutionMonthly.isSelected()) {
+		if (chckbxP2.isSelected()) {
 			btws += 3;
 			// Get monthly amount for this publication
 			// totalCost += result;
 		}
-		if (chckbxTrumpWeekly.isSelected()) {
+		if (chckbxP3.isSelected()) {
 			btws += 5;
 			// Get monthly amount for this publication
 			// totalCost += result;
 
 		}
-		if (chckbxQwerty.isSelected()) {
+		if (chckbxP1.isSelected()) {
 			btws += 7;
 			// Get monthly amount for this publication
 			// totalCost += result;
@@ -478,7 +572,7 @@ public class Interface extends JFrame {
 				 */
 			}
 		});
-		btnSaveMe.setBounds(10, 210, 89, 23);
+		btnSaveMe.setBounds(10, 267, 89, 23);
 		panel_2.add(btnSaveMe);
 
 		/*----------------------------------------------
@@ -510,7 +604,7 @@ public class Interface extends JFrame {
 				 */
 			}
 		});
-		btnAddMe.setBounds(109, 210, 89, 23);
+		btnAddMe.setBounds(188, 267, 89, 23);
 		panel_2.add(btnAddMe);
 
 		/*----------------------------------------------
@@ -518,7 +612,7 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JButton btnDeleteMe = new JButton("Delete");
-		btnDeleteMe.setBounds(208, 210, 89, 23);
+		btnDeleteMe.setBounds(360, 267, 89, 23);
 		panel_2.add(btnDeleteMe);
 
 		btnDeleteMe.addActionListener(new ActionListener() {
@@ -528,6 +622,59 @@ public class Interface extends JFrame {
 
 			}
 		});
+		
+		
+		 MouseAdapter mouseListener = new MouseAdapter() {
+		     public void mouseClicked(MouseEvent e) {
+		         if (e.getClickCount() == 2) {
+		             int index = listResults.locationToIndex(e.getPoint());
+		             ArrayList<String> res = table.get(index);
+		             System.out.println(res);
+		             System.out.println("Double clicked on Item " + index);
+		             tabbedPane.setSelectedIndex(2);
+		             idLabel.setText(res.get(0));
+		             nameText.setText(res.get(1));
+		             addressText.setText(res.get(2));
+		             districtText.setText(res.get(3));
+		             chckbxOnHoliday.setSelected(Boolean.parseBoolean(res.get(4)));
+		             lblBillingDate.setText(res.get(5));
+		             lblTotalValue.setText(res.get(6));
+		             
+		             
+		             
+		             if(res.get(7).charAt(0) == '1'){
+		            	 chckbxP1.setSelected(true);		            	 
+		             }else{
+		            	 chckbxP1.setSelected(false);
+		             }
+		             if(res.get(7).charAt(1) == '1'){
+		            	 chckbxP2.setSelected(true);		            	 
+		             }
+		             else{
+		            	 chckbxP2.setSelected(false);
+		             }
+		             if(res.get(7).charAt(2) == '1'){
+		            	 chckbxP3.setSelected(true);		            	 
+		             }
+		             else{
+		            	 chckbxP3.setSelected(false);
+		             }
+		             if(res.get(7).charAt(3) == '1'){
+		            	 chckbxP4.setSelected(true);		            	 
+		             }
+		             else{
+		            	 chckbxP4.setSelected(false);
+		             }
+		             
+		             textEndHoliday.setText(res.get(8));
+		             
+		             
+		          }
+		     }
+		 };
+		 
+
+			listResults.addMouseListener(mouseListener);
 
 	}
 }
