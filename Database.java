@@ -75,6 +75,18 @@ public class Database {
 		return subs.search(CUSTOMER_ID, key);
 	}
 	
+	public ArrayList<ArrayList<String>> searchByPublication(String key){//Returns null if key is invalid 
+		int loc;//the location in the bit string
+		try{
+			loc = Integer.parseInt(key);
+		}
+		catch(NumberFormatException e){
+			return null;
+		}
+		
+		return subs.multisearchBitString(PUBS, loc);
+	}
+	
 	public boolean editSubscription(String id, int pub){//Changes whether the customer with id is subscribed to publication pub; returns false if customer doesn't exist
 		ArrayList<String> data = searchByCustomerID(id); //Get the data for customer id
 		if(data == null){

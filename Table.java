@@ -149,6 +149,35 @@ public class Table {
 		return item;//Item is an array list of array lists, each of which represents an item
 	}
 	
+	public ArrayList<ArrayList<String>> multisearchBitString(int field, int key){//Searches field for the bit string being 1 at location key and returns all data on all items with that bit in the field; returns null if not found
+		if(field >= fields.size()){
+			return null;//Field doesn't exist
+		}
+		
+		ArrayList<Integer> id = new ArrayList<Integer>();//The ids of the found items
+		ArrayList<ArrayList<String>> item = new ArrayList<ArrayList<String>>(); 
+		
+		for(int i = 0; i < fields.get(field).size(); i++){//Search for the key in the given field
+			if(fields.get(field).get(i).charAt(key) == '1'){//if the bit is true
+				id.add(i);//Save the id
+			}
+		}
+		
+		if(id.isEmpty()){
+			return null;//Key not found
+		}
+		
+		for(int j = 0; j < id.size(); j++){//Loop through all the ids
+			int curr = id.get(j);//The current id
+			item.add(new ArrayList<String>());//The current item
+			for(int i = 0; i < fields.size(); i++){//Add the values to the item
+				item.get(j).add(fields.get(i).get(curr));
+			}
+		}
+		
+		return item;//Item is an array list of array lists, each of which represents an item
+	}
+	
 	public boolean save(){//Saves the table to 'name'.jtab; returns false if IOException occurred
 		try {
 			PrintWriter out = new PrintWriter(new File(name + ".jtab"));
