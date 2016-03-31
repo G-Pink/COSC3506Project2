@@ -87,9 +87,16 @@ public class Database {
 		return subs.multisearchBitString(PUBS, loc);
 	}
 	
-	public boolean editSubscription(String id, int pub){//Changes whether the customer with id is subscribed to publication pub; returns false if customer doesn't exist
+	public boolean editSubscription(String id, String p){//Changes whether the customer with id is subscribed to publication p; returns false if customer doesn't exist or p is not an integer
 		ArrayList<String> data = searchByCustomerID(id); //Get the data for customer id
 		if(data == null){
+			return false;
+		}
+		int pub;
+		try{
+			pub = Integer.parseInt(p);
+		}
+		catch(NumberFormatException e){
 			return false;
 		}
 		
