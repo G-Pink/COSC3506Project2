@@ -139,8 +139,8 @@ public class Interface extends JFrame {
 		 * Print Button
 		 ----------------------------------------------*/
 
-		JButton btnPrint = new JButton("Display");
-		btnPrint.addActionListener(new ActionListener() {
+		JButton btnDisplay = new JButton("Display");
+		btnDisplay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
 				// String s = table.get(0).toString();
@@ -185,8 +185,8 @@ public class Interface extends JFrame {
 				}
 			}
 		});
-		btnPrint.setBounds(218, 7, 89, 23);
-		panel.add(btnPrint);
+		btnDisplay.setBounds(218, 7, 89, 23);
+		panel.add(btnDisplay);
 
 		/*
 		 * ===============================================
