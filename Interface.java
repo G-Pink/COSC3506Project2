@@ -114,13 +114,16 @@ public class Interface extends JFrame {
 		JLabel lblLog = new JLabel("Log:");
 		lblLog.setBounds(10, 51, 46, 14);
 		panel.add(lblLog);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 70, 462, 232);
+		panel.add(scrollPane_1);
 
 		JTextPane txtpnStatus = new JTextPane();
+		scrollPane_1.setViewportView(txtpnStatus);
 		txtpnStatus.setFont(new Font("Courier New", Font.PLAIN, 11));
 		txtpnStatus.setEditable(false);
 		txtpnStatus.setText("...waiting for input");
-		txtpnStatus.setBounds(10, 70, 462, 232);
-		panel.add(txtpnStatus);
 
 		/*----------------------------------------------
 		 * Drop Down Menu
