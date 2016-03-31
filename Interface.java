@@ -468,18 +468,18 @@ public class Interface extends JFrame {
 				
 				//publication
 				if (chckbxP1.isSelected() && btws.charAt(0) == '1') {
-					db.editSubscription(idLabel.getText(), 0);
+					db.editSubscription(idLabel.getText(), "0");
 
 				}
 				if (chckbxP2.isSelected()&& btws.charAt(1) == '1') {
-					db.editSubscription(idLabel.getText(), 1);
+					db.editSubscription(idLabel.getText(), "1");
 				}
 				if (chckbxP3.isSelected()&& btws.charAt(2) == '1'){
-					db.editSubscription(idLabel.getText(), 2);
+					db.editSubscription(idLabel.getText(), "2");
 
 				}
 				if (chckbxP4.isSelected()&& btws.charAt(3) == '1') {
-					db.editSubscription(idLabel.getText(), 3);
+					db.editSubscription(idLabel.getText(), "3");
 				}
 				
 			}
@@ -516,18 +516,18 @@ public class Interface extends JFrame {
 				
 				//publication
 				if (chckbxP1.isSelected() && btws.charAt(0) == '1') {
-					db.editSubscription(newID, 0);
+					db.editSubscription(newID, "0");
 
 				}
 				if (chckbxP2.isSelected()&& btws.charAt(1) == '1') {
-					db.editSubscription(newID, 1);
+					db.editSubscription(newID, "1");
 				}
 				if (chckbxP3.isSelected()&& btws.charAt(2) == '1'){
-					db.editSubscription(newID, 2);
+					db.editSubscription(newID, "2");
 
 				}
 				if (chckbxP4.isSelected()&& btws.charAt(3) == '1') {
-					db.editSubscription(newID, 3);
+					db.editSubscription(newID, "3");
 				}
 			}
 		});
