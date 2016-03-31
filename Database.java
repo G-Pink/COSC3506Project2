@@ -187,6 +187,10 @@ public class Database {
 		return subs.insert(data);
 	}
 	
+	public boolean createCustomer(ArrayList<String> data){//Overloaded version for when all the data is already known
+		return subs.insert(data);
+	}
+	
 	public boolean addOnHoliday(String id, String date){//date is the end date
 		ArrayList<String> data = searchByCustomerID(id); //Get the data for customer id
 		if(data == null){
