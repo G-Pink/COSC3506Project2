@@ -182,7 +182,7 @@ public class Database {
 		data.add(date);//billing date
 		data.add("");//total
 		data.add("0000");//pub id
-		data.add("00-00-0000");
+		data.add("00-00-0000");//on holiday end date
 		
 		return subs.insert(data);
 	}
