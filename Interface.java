@@ -579,64 +579,15 @@ public class Interface extends JFrame {
 			}
 		});
 		
-		/*----------------------------------------------
-		 * Double Click Mouse Listener
-		 ----------------------------------------------*/
-
-		MouseAdapter mouseListener = new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					String index = ""+listResults.locationToIndex(e.getPoint());
-					
-					ArrayList<String> res = db.searchByCustomerID(index);
-					System.out.println(res);
-					System.out.println("Double clicked on Item " + index);
-					tabbedPane.setSelectedIndex(2);
-					idLabel.setText(res.get(0));
-					nameText.setText(res.get(1));
-					addressText.setText(res.get(2));
-					districtText.setText(res.get(3));
-					chckbxOnHoliday.setSelected(Boolean.parseBoolean(res.get(4)));
-					lblBillingDate.setText(res.get(5));
-					lblTotalValue.setText(res.get(6));
-
-					if (res.get(7).charAt(0) == '1') {
-						chckbxP1.setSelected(true);
-					} else {
-						chckbxP1.setSelected(false);
-					}
-					if (res.get(7).charAt(1) == '1') {
-						chckbxP2.setSelected(true);
-					} else {
-						chckbxP2.setSelected(false);
-					}
-					if (res.get(7).charAt(2) == '1') {
-						chckbxP3.setSelected(true);
-					} else {
-						chckbxP3.setSelected(false);
-					}
-					if (res.get(7).charAt(3) == '1') {
-						chckbxP4.setSelected(true);
-					} else {
-						chckbxP4.setSelected(false);
-					}
-
-					textEndHoliday.setText(res.get(8));
-
-				}
-			}
-		};
-
-		listResults.addMouseListener(mouseListener);
+		
 
 		/*----------------------------------------------
 		 * ACTION Button for Searching
 		 ----------------------------------------------*/
-
+		
+						
 		btnSearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				ArrayList<ArrayList<String>> table = null;
 
 				// Search by Name
 				if (searchingBy.getSelectedIndex() == 0) {
@@ -695,16 +646,70 @@ public class Interface extends JFrame {
 					listResults.setListData(err);
 				} else {
 
-					String txt = ("ID  Name      Address   District");
-					ArrayList<String> nw = new ArrayList<String>();
-					nw.add(txt);
-					table.add(0, nw);
+					//String txt = ("ID  Name      Address   District");
+					//ArrayList<String> nw = new ArrayList<String>();
+					//nw.add(txt);
+					//table.add(0, nw);
 
 					listResults.setListData(table.toArray());
 				}
 
 			}
 		});
+		
+		/*----------------------------------------------
+		 * Double Click Mouse Listener
+		 ----------------------------------------------*/
+
+		MouseAdapter mouseListener = new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int indx = listResults.locationToIndex(e.getPoint());
+					System.out.print(indx);
+					System.out.print(table.get(indx));
+					ArrayList<String> idex = table.get(indx);
+					String index = idex.get(0);		
+					
+					ArrayList<String> res = db.searchByCustomerID(index);
+					System.out.println(res);
+					System.out.println("Double clicked on Item " + index);
+					tabbedPane.setSelectedIndex(2);
+					idLabel.setText(res.get(0));
+					nameText.setText(res.get(1));
+					addressText.setText(res.get(2));
+					districtText.setText(res.get(3));
+					chckbxOnHoliday.setSelected(Boolean.parseBoolean(res.get(4)));
+					lblBillingDate.setText(res.get(5));
+					lblTotalValue.setText(res.get(6));
+
+					if (res.get(7).charAt(0) == '1') {
+						chckbxP1.setSelected(true);
+					} else {
+						chckbxP1.setSelected(false);
+					}
+					if (res.get(7).charAt(1) == '1') {
+						chckbxP2.setSelected(true);
+					} else {
+						chckbxP2.setSelected(false);
+					}
+					if (res.get(7).charAt(2) == '1') {
+						chckbxP3.setSelected(true);
+					} else {
+						chckbxP3.setSelected(false);
+					}
+					if (res.get(7).charAt(3) == '1') {
+						chckbxP4.setSelected(true);
+					} else {
+						chckbxP4.setSelected(false);
+					}
+
+					textEndHoliday.setText(res.get(8));
+
+				}
+			}
+		};
+
+		listResults.addMouseListener(mouseListener);
 
 	}
 	
