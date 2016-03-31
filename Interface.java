@@ -27,6 +27,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Formatter;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
@@ -266,7 +268,7 @@ public class Interface extends JFrame {
 		customerID.setBounds(10, 11, 103, 14);
 		panel_2.add(customerID);
 
-		JLabel idLabel = new JLabel("QQQQ");
+		JLabel idLabel = new JLabel(db.getNewCustomerID());
 		idLabel.setBounds(123, 11, 46, 14);
 		panel_2.add(idLabel);
 
@@ -362,7 +364,19 @@ public class Interface extends JFrame {
 		lblBillingName.setBounds(10, 109, 107, 14);
 		panel_2.add(lblBillingName);
 
-		JLabel lblBillingDate = new JLabel("02-20-2016");
+		java.util.Date date= new Date();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		int month = 0;
+		if(cal.get(Calendar.DAY_OF_MONTH) < 15){
+			month = cal.get(Calendar.MONTH) + 1;
+		}else{
+			month = cal.get(Calendar.MONTH) + 2;
+		}
+		
+		int year = cal.get(Calendar.YEAR);
+		
+		JLabel lblBillingDate = new JLabel(month + "-15-" + year);
 		lblBillingDate.setBounds(123, 109, 128, 14);
 		panel_2.add(lblBillingDate);
 
@@ -403,35 +417,32 @@ public class Interface extends JFrame {
 		panel_2.add(chckbxP4);
 
 		/*
-		 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ BITWISE STRING AND
-		 * PUBLICATION CHANGES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
+		 * BITWISE STRING AND
+		 * PUBLICATION CHANGES
+		 *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		 */
 
-		int btws = 0;
-		double totalCost = 0;
+	
+		char c1 = '0';
+		char c2 = '0';
+		char c3 = '0';
+		char c4 = '0';
 
-		if (chckbxP3.isSelected()) {
-			btws += 1;
-			// Get monthly amount for this publication
-			// totalCost += result;
-
+		if (chckbxP1.isSelected()) {
+			c1 = '1';
 		}
 		if (chckbxP2.isSelected()) {
-			btws += 3;
-			// Get monthly amount for this publication
-			// totalCost += result;
+			c2 = '1';
 		}
 		if (chckbxP3.isSelected()) {
-			btws += 5;
-			// Get monthly amount for this publication
-			// totalCost += result;
-
+			c1 = '1';
 		}
-		if (chckbxP1.isSelected()) {
-			btws += 7;
-			// Get monthly amount for this publication
-			// totalCost += result;
+		if (chckbxP4.isSelected()) {
+			c1 = '1';
 		}
+		
+		final String btws = (""+c1+c2+c3+c4);
 
 		/*----------------------------------------------
 		 * Save customer changes button
@@ -440,29 +451,37 @@ public class Interface extends JFrame {
 		JButton btnSaveMe = new JButton("Save");
 		btnSaveMe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				
+				//name
+				db.editCustomerName(idLabel.getText(), nameText.getText());
+				//address
+				db.editCustomerAddress(idLabel.getText(), addressText.getText());
+				//district
+				db.editCustomerDistrictID(idLabel.getText(), districtText.getText());
+				
+				//holiday
+				if(chckbxOnHoliday.isSelected()){
+					db.addOnHoliday(idLabel.getText(), textEndHoliday.getText());
+				}
+				
+				db.updateMonthlyTotal(idLabel.getText());
+				
+				//publication
+				if (chckbxP1.isSelected() && btws.charAt(0) == '1') {
+					db.editSubscription(idLabel.getText(), 0);
 
-				/*
-				 * =============================================================
-				 * 
-				 * id = idLabel.getText(); nme = nameText.getText(); address =
-				 * addressText.getText(); district = districtText.getText()
-				 * billingDate = labelBillingDate.getText(); monthlyTotal =
-				 * lblTotalValue.getText();
-				 * 
-				 * if(chckbxOnHoliday.isSelected(){
-				 * 
-				 * String date =
-				 * 
-				 * }
-				 * 
-				 * 
-				 * 
-				 * 
-				 * deleteCustomer(id); addCustomer(id, name, address, district,
-				 * onHoliday, billingDate, monthlyTotal, btws);
-				 * 
-				 * ============================================================
-				 */
+				}
+				if (chckbxP2.isSelected()&& btws.charAt(1) == '1') {
+					db.editSubscription(idLabel.getText(), 1);
+				}
+				if (chckbxP3.isSelected()&& btws.charAt(2) == '1'){
+					db.editSubscription(idLabel.getText(), 2);
+
+				}
+				if (chckbxP4.isSelected()&& btws.charAt(3) == '1') {
+					db.editSubscription(idLabel.getText(), 3);
+				}
+				
 			}
 		});
 		btnSaveMe.setBounds(10, 267, 89, 23);
@@ -476,25 +495,40 @@ public class Interface extends JFrame {
 		btnAddMe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				/*
-				 * =============================================================
-				 * 
-				 * id = idLabel.getText(); nme = nameText.getText(); address =
-				 * addressText.getText(); district = districtText.getText()
-				 * billingDate = labelBillingDate.getText(); monthlyTotal =
-				 * lblTotalValue.getText();
-				 * 
-				 * if(chckbxOnHoliday.isSelected(){
-				 * 
-				 * String date =
-				 * 
-				 * }
-				 * 
-				 * addCustomer(id, nme, address, district, onHoliday,
-				 * billingDate, monthlyTotal, btws);
-				 * 
-				 * =============================================================
-				 */
+						
+				//id
+				String newID = idLabel.getText();
+				//new customer
+				db.createCustomer(newID, lblBillingDate.getText());
+				//name
+				db.editCustomerName(newID, nameText.getText());
+				//address
+				db.editCustomerAddress(newID, addressText.getText());
+				//district
+				db.editCustomerDistrictID(newID, districtText.getText());
+				
+				//holiday
+				if(chckbxOnHoliday.isSelected()){
+					db.addOnHoliday(newID, textEndHoliday.getText());
+				}
+				
+				db.updateMonthlyTotal(newID);
+				
+				//publication
+				if (chckbxP1.isSelected() && btws.charAt(0) == '1') {
+					db.editSubscription(newID, 0);
+
+				}
+				if (chckbxP2.isSelected()&& btws.charAt(1) == '1') {
+					db.editSubscription(newID, 1);
+				}
+				if (chckbxP3.isSelected()&& btws.charAt(2) == '1'){
+					db.editSubscription(newID, 2);
+
+				}
+				if (chckbxP4.isSelected()&& btws.charAt(3) == '1') {
+					db.editSubscription(newID, 3);
+				}
 			}
 		});
 		btnAddMe.setBounds(188, 267, 89, 23);
@@ -507,15 +541,44 @@ public class Interface extends JFrame {
 		JButton btnDeleteMe = new JButton("Delete");
 		btnDeleteMe.setBounds(360, 267, 89, 23);
 		panel_2.add(btnDeleteMe);
-
 		btnDeleteMe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 
-				// deleteCustomer(id);
+
+				db.deleteCustomer(idLabel.getText());
 
 			}
 		});
 
+		/*----------------------------------------------
+		 * Clear Button
+		 ----------------------------------------------*/
+
+		JButton btnClear = new JButton("Clear");
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		btnClear.setBounds(339, 11, 89, 23);
+		panel_2.add(btnClear);
+		btnClear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				//id
+				idLabel.setText(db.getNewCustomerID());
+				nameText.setText("");
+				addressText.setText("");
+				districtText.setText("");
+				chckbxOnHoliday.setSelected(false);
+				chckbxP1.setSelected(false);
+				chckbxP2.setSelected(false);
+				chckbxP3.setSelected(false);
+				chckbxP4.setSelected(false);
+				
+			
+			}
+		});
+		
 		/*----------------------------------------------
 		 * Double Click Mouse Listener
 		 ----------------------------------------------*/
@@ -523,8 +586,9 @@ public class Interface extends JFrame {
 		MouseAdapter mouseListener = new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
-					int index = listResults.locationToIndex(e.getPoint());
-					ArrayList<String> res = table.get(index);
+					String index = ""+listResults.locationToIndex(e.getPoint());
+					
+					ArrayList<String> res = db.searchByCustomerID(index);
 					System.out.println(res);
 					System.out.println("Double clicked on Item " + index);
 					tabbedPane.setSelectedIndex(2);
@@ -577,7 +641,7 @@ public class Interface extends JFrame {
 				// Search by Name
 				if (searchingBy.getSelectedIndex() == 0) {
 
-					table = db.searchByCName(searchText.getText());
+					table = db.searchByName(searchText.getText());
 
 				}
 
@@ -611,7 +675,7 @@ public class Interface extends JFrame {
 						publicate = "3";
 					}
 
-					// table = db.searchByPublication(publicate);
+					table = db.searchByPublication(publicate);
 
 				}
 				// search by District
@@ -754,5 +818,4 @@ public class Interface extends JFrame {
 			return output;
 		}
 	}
-
 }
