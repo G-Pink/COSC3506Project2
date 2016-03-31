@@ -39,46 +39,30 @@ public class Interface extends JFrame {
 	private JTextField addressText;
 	private JTextField districtText;
 	private JTextField textEndHoliday;
+	
+	
 
 	/**
 	 * Launch the application.
 	 */
-	//Table table = new Table("Subscriptions");
-	
+	// Table table = new Table("Subscriptions");
+
 	ArrayList<String> row1 = new ArrayList<String>();
 	ArrayList<String> row2 = new ArrayList<String>();
 	ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
-	
-	
+
 	public static void main(String[] args) {
-
-		// OnHoliday Check @ load to see if people are still on holidays
-
-		/*
-		 * =====================================================================
-		 * 
-		 * call searchByOnHoliday() -- should pull up all customers on holiday
-		 * 
-		 * if(holiday end date < current date){ onHoliday = false; }
-		 * 
-		 * 
-		 * =====================================================================
-		 */
-		
-		
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Interface frame = new Interface();
 					frame.setVisible(true);
-					
-					
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+
 			}
 		});
 	}
@@ -87,31 +71,18 @@ public class Interface extends JFrame {
 	 * Create the frame. *
 	 */
 	public Interface() {
-		
-		
-		row1.add("0");
-		row1.add("Peter Parker");
-		row1.add("123 Main St");
-		row1.add("7");
-		row1.add("true");
-		row1.add("Whenever");
-		row1.add("six billion dollars");
-		row1.add("0010");
-		row1.add("nada");
-		
-		row2.add("1");
-		row2.add("Jhon Doe");
-		row2.add("321 Main St");
-		row2.add("12");
-		row2.add("false");
-		row2.add("Whenever");
-		row2.add("six hundred billion dollars");
-		row2.add("1001");
-		row2.add("nada");
-		
-		table.add(row1);
-		table.add(row2);
-		
+
+		/*----------------------------------------------
+		 * Database Creation
+		 ----------------------------------------------*/
+
+		Database db = new Database();
+		db.getConnection();
+
+		/*----------------------------------------------
+		 * Base Panes
+		 ----------------------------------------------*/
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 513, 389);
 		contentPane = new JPanel();
@@ -133,11 +104,11 @@ public class Interface extends JFrame {
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Reports", null, panel, null);
 		panel.setLayout(null);
-		
+
 		/*----------------------------------------------
 		 * Status Text Area for Reports + label
 		 ----------------------------------------------*/
-	
+
 		JLabel lblLog = new JLabel("Log:");
 		lblLog.setBounds(10, 51, 46, 14);
 		panel.add(lblLog);
@@ -145,20 +116,19 @@ public class Interface extends JFrame {
 		JTextPane txtpnStatus = new JTextPane();
 		txtpnStatus.setFont(new Font("Courier New", Font.PLAIN, 11));
 		txtpnStatus.setEditable(false);
-		txtpnStatus.setText("log lol");
+		txtpnStatus.setText("...waiting for input");
 		txtpnStatus.setBounds(10, 70, 462, 232);
 		panel.add(txtpnStatus);
-		
 
 		/*----------------------------------------------
 		 * Drop Down Menu
 		 ----------------------------------------------*/
-		
+
 		JComboBox mnuReport = new JComboBox();
-		mnuReport.setModel(new DefaultComboBoxModel(new String[] {"Delivery Report", "Delivery Summary", "Customer Bills"}));
+		mnuReport.setModel(
+				new DefaultComboBoxModel(new String[] {"Delivery Report", "Customer Bills"}));
 		mnuReport.setBounds(10, 8, 145, 20);
 		panel.add(mnuReport);
-		
 
 		/*----------------------------------------------
 		 * Print Button
@@ -167,78 +137,47 @@ public class Interface extends JFrame {
 		JButton btnPrint = new JButton("Display");
 		btnPrint.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-						
-				//String s = table.get(0).toString();
-				String s = table.get(0).get(1);
-				//String s = null;
-				
-				 if(mnuReport.getSelectedIndex() == 0){
-					 
-					 txtpnStatus.setText("Dist  Address             Name                Publications");
-					 
-					 for(int x=0; x<table.size(); x++){
-						 
-						 System.out.print("");
-						 
-						 String name = table.get(x).get(1);
-						 String address = table.get(x).get(2);
-						 String distID = table.get(x).get(3);
-						 String pubs = table.get(x).get(7);
-						 
-						 String output = "";
-						 int nameWht = 20;
-						 int addWht = 20;
-						 
-						 if(distID.length() == 1){
-							 output = output + (" " + distID + "    ");
-						 }else{
-							 output = output + (distID + "    ");
-						 }
-						 
-						 output = output + (address);
-						 
-						 addWht = 20 - address.length();
-						 
-						 for(int y = addWht; y>0; y--){
-							 output = output + (" ");
-						 }
-						 
-						 output = output + name;
-						 
-						 nameWht = 20 - name.length();
-						 
-						 for(int y = nameWht; y>0; y--){
-							 output = output + (" ");
-						 }
-						 						 						 
-						 output = output + (pubs);
-						 
-						 System.out.print(output + " halp ");
-						
-						 txtpnStatus.setText(txtpnStatus.getText() + "\n" + output);
-						 
-						 
-					 }
-					 		        		
-				 	//s = "Delivery Report";
-				 	//Get all customers by district
-				 	//(name, address, district, publications)
-				 	//s = (table.get(0) + "\n" + table.get(1));
-				 }
-				 if(mnuReport.getSelectedIndex() == 1){
-				 	s= "Delivery Summary";
-				 	//Get all customers by district
-				 	//(name, address, district, publications)
-				 }
-				  if(mnuReport.getSelectedIndex() == 2){
-				 	s = "Customer Bills";
-				 	//Print all customer billing information by district
-				 	//(Name, monthly amount, billing date, address, district)
-				 }
-				
-				// txtpnStatus.setText(s + Search results);
-				  //txtpnStatus.setText(s);
-				
+
+				// String s = table.get(0).toString();
+
+				if (mnuReport.getSelectedIndex() == 0) {
+
+					txtpnStatus.setText("Dist  Address             Name                Publications");
+
+					ArrayList<ArrayList<String>> dist0 = db.seachByDistrict("0");
+					ArrayList<ArrayList<String>> dist1 = db.seachByDistrict("1");
+					ArrayList<ArrayList<String>> dist2 = db.seachByDistrict("2");
+					ArrayList<ArrayList<String>> dist3 = db.seachByDistrict("3");
+
+					String output = " ";
+					output = (distFormatter(dist0) + "\n" + distFormatter(dist1) + "\n" + distFormatter(dist2) + "\n"
+							+ distFormatter(dist3) + "\n");
+
+					txtpnStatus.setText(txtpnStatus.getText() + "\n" + output);
+
+					// s = "Delivery Report";
+					// Get all customers by district
+					// (name, address, district, publications)
+					// s = (table.get(0) + "\n" + table.get(1));
+				}
+				if (mnuReport.getSelectedIndex() == 1) {
+					// s = "Customer Bills";
+					// Print all customer billing information by district
+					// (Name, monthly amount, billing date, address, district)
+					
+					txtpnStatus.setText("Dist    ID   Name             Billing Date    Monthly Total");
+					
+					ArrayList<ArrayList<String>> dist0 = db.seachByDistrict("0");
+					ArrayList<ArrayList<String>> dist1 = db.seachByDistrict("1");
+					ArrayList<ArrayList<String>> dist2 = db.seachByDistrict("2");
+					ArrayList<ArrayList<String>> dist3 = db.seachByDistrict("3");
+					
+					String output = " ";
+					output = (cashFormatter(dist0) + "\n" + cashFormatter(dist1) + "\n" + cashFormatter(dist2) + "\n"
+							+ cashFormatter(dist3) + "\n");
+					
+					txtpnStatus.setText(txtpnStatus.getText() + "\n" + output);
+				}
 			}
 		});
 		btnPrint.setBounds(218, 7, 89, 23);
@@ -271,7 +210,8 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JComboBox searchingBy = new JComboBox();
-		searchingBy.setModel(new DefaultComboBoxModel(new String[] {"Customer Name", "Customer ID", "Address", "Publication", "District", "On Holiday", "Billing Date"}));
+		searchingBy.setModel(new DefaultComboBoxModel(new String[] { "Customer Name", "Customer ID", "Address",
+				"Publication", "District", "On Holiday", "Billing Date" }));
 		searchingBy.setBounds(241, 11, 132, 20);
 		panel_1.add(searchingBy);
 
@@ -282,22 +222,22 @@ public class Interface extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 42, 462, 260);
 		panel_1.add(scrollPane);
-		
-				JList listResults = new JList();
-				scrollPane.setViewportView(listResults);
-				listResults.setModel(new AbstractListModel() {
-					String[] values = new String[] { "customer 1", "customer 2" };
 
-					public int getSize() {
-						return values.length;
-					}
+		JList listResults = new JList();
+		listResults.setFont(new Font("Courier New", Font.PLAIN, 11));
+		scrollPane.setViewportView(listResults);
+		listResults.setModel(new AbstractListModel() {
+			String[] values = new String[] { "customer 1", "customer 2" };
 
-					public Object getElementAt(int index) {
-						return values[index];
-					}
-				});
-		
-		
+			public int getSize() {
+				return values.length;
+			}
+
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+
 		/*----------------------------------------------
 		 * Search Button
 		 ----------------------------------------------*/
@@ -305,49 +245,6 @@ public class Interface extends JFrame {
 		JButton btnSearch = new JButton("Search");
 		btnSearch.setBounds(383, 10, 89, 23);
 		panel_1.add(btnSearch);
-		
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				 if(searchingBy.getSelectedIndex() == 0){
-				 	//search by Customer Name
-				 }
-				 if(searchingBy.getSelectedIndex() == 1){
-				 	//search by Customer ID
-					// ArrayList<ArrayList<String>> fields;
-					 
-					 
-					 //ArrayList<String> temp = table.search(0, searchText.getText());
-					 
-					/* String result = null;
-					 
-					 while(!temp.isEmpty()){
-						 result.concat(temp.get(0) + " ");
-						 temp.remove(0);
-					 }*/
-					 listResults.setListData(table.toArray());
-					 
-				 }
-				 if(searchingBy.getSelectedIndex() == 2){
-				 	//search by Address
-				 }
-				 if(searchingBy.getSelectedIndex() == 3){
-					//search by Publication
-				 }
-				 if(searchingBy.getSelectedIndex() == 4){
-					//search by District
-				 }
-				 if(searchingBy.getSelectedIndex() == 5){
-					//search by whether or not they're on holiday
-				 }
-				 if(searchingBy.getSelectedIndex() == 6){
-					//search by Billing Date
-				 }
-			}
-		});
-
-
-
 
 		/*
 		 * ===============================================
@@ -422,20 +319,17 @@ public class Interface extends JFrame {
 		JLabel lblOnHoliday = new JLabel("On Holiday: ");
 		lblOnHoliday.setBounds(10, 159, 107, 14);
 		panel_2.add(lblOnHoliday);
-		
-		
 
 		JCheckBox chckbxOnHoliday = new JCheckBox("");
 		chckbxOnHoliday.setVerticalAlignment(SwingConstants.BOTTOM);
 		chckbxOnHoliday.setBounds(123, 159, 34, 23);
 		panel_2.add(chckbxOnHoliday);
-		
+
 		chckbxOnHoliday.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(chckbxOnHoliday.isSelected()){
+				if (chckbxOnHoliday.isSelected()) {
 					textEndHoliday.setEditable(true);
-				}
-				else{
+				} else {
 					textEndHoliday.setEditable(false);
 				}
 			}
@@ -509,9 +403,8 @@ public class Interface extends JFrame {
 		panel_2.add(chckbxP4);
 
 		/*
-		 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
-		 * BITWISE STRING AND PUBLICATION CHANGES 
-		 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ BITWISE STRING AND
+		 * PUBLICATION CHANGES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 		 */
 
 		int btws = 0;
@@ -622,59 +515,244 @@ public class Interface extends JFrame {
 
 			}
 		});
-		
-		
-		 MouseAdapter mouseListener = new MouseAdapter() {
-		     public void mouseClicked(MouseEvent e) {
-		         if (e.getClickCount() == 2) {
-		             int index = listResults.locationToIndex(e.getPoint());
-		             ArrayList<String> res = table.get(index);
-		             System.out.println(res);
-		             System.out.println("Double clicked on Item " + index);
-		             tabbedPane.setSelectedIndex(2);
-		             idLabel.setText(res.get(0));
-		             nameText.setText(res.get(1));
-		             addressText.setText(res.get(2));
-		             districtText.setText(res.get(3));
-		             chckbxOnHoliday.setSelected(Boolean.parseBoolean(res.get(4)));
-		             lblBillingDate.setText(res.get(5));
-		             lblTotalValue.setText(res.get(6));
-		             
-		             
-		             
-		             if(res.get(7).charAt(0) == '1'){
-		            	 chckbxP1.setSelected(true);		            	 
-		             }else{
-		            	 chckbxP1.setSelected(false);
-		             }
-		             if(res.get(7).charAt(1) == '1'){
-		            	 chckbxP2.setSelected(true);		            	 
-		             }
-		             else{
-		            	 chckbxP2.setSelected(false);
-		             }
-		             if(res.get(7).charAt(2) == '1'){
-		            	 chckbxP3.setSelected(true);		            	 
-		             }
-		             else{
-		            	 chckbxP3.setSelected(false);
-		             }
-		             if(res.get(7).charAt(3) == '1'){
-		            	 chckbxP4.setSelected(true);		            	 
-		             }
-		             else{
-		            	 chckbxP4.setSelected(false);
-		             }
-		             
-		             textEndHoliday.setText(res.get(8));
-		             
-		             
-		          }
-		     }
-		 };
-		 
 
-			listResults.addMouseListener(mouseListener);
+		/*----------------------------------------------
+		 * Double Click Mouse Listener
+		 ----------------------------------------------*/
+
+		MouseAdapter mouseListener = new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int index = listResults.locationToIndex(e.getPoint());
+					ArrayList<String> res = table.get(index);
+					System.out.println(res);
+					System.out.println("Double clicked on Item " + index);
+					tabbedPane.setSelectedIndex(2);
+					idLabel.setText(res.get(0));
+					nameText.setText(res.get(1));
+					addressText.setText(res.get(2));
+					districtText.setText(res.get(3));
+					chckbxOnHoliday.setSelected(Boolean.parseBoolean(res.get(4)));
+					lblBillingDate.setText(res.get(5));
+					lblTotalValue.setText(res.get(6));
+
+					if (res.get(7).charAt(0) == '1') {
+						chckbxP1.setSelected(true);
+					} else {
+						chckbxP1.setSelected(false);
+					}
+					if (res.get(7).charAt(1) == '1') {
+						chckbxP2.setSelected(true);
+					} else {
+						chckbxP2.setSelected(false);
+					}
+					if (res.get(7).charAt(2) == '1') {
+						chckbxP3.setSelected(true);
+					} else {
+						chckbxP3.setSelected(false);
+					}
+					if (res.get(7).charAt(3) == '1') {
+						chckbxP4.setSelected(true);
+					} else {
+						chckbxP4.setSelected(false);
+					}
+
+					textEndHoliday.setText(res.get(8));
+
+				}
+			}
+		};
+
+		listResults.addMouseListener(mouseListener);
+
+		/*----------------------------------------------
+		 * ACTION Button for Searching
+		 ----------------------------------------------*/
+
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+
+				ArrayList<ArrayList<String>> table = null;
+
+				// Search by Name
+				if (searchingBy.getSelectedIndex() == 0) {
+
+					table = db.searchByCName(searchText.getText());
+
+				}
+
+				// Search by ID
+				if (searchingBy.getSelectedIndex() == 1) {
+
+					ArrayList<String> qqq = db.searchByCustomerID(searchText.getText());
+					table.add(qqq);
+
+				}
+
+				// Search by Address
+				if (searchingBy.getSelectedIndex() == 2) {
+
+					table = db.searchByAddress(searchText.getText());
+
+				}
+
+				// search by Publication
+				if (searchingBy.getSelectedIndex() == 3) {
+
+					String publicate = " ";
+
+					if (searchText.getText().equalsIgnoreCase(chckbxP1.getText())) {
+						publicate = "0";
+					} else if (searchText.getText().equalsIgnoreCase(chckbxP2.getText())) {
+						publicate = "1";
+					} else if (searchText.getText().equalsIgnoreCase(chckbxP3.getText())) {
+						publicate = "2";
+					} else if (searchText.getText().equalsIgnoreCase(chckbxP3.getText())) {
+						publicate = "3";
+					}
+
+					// table = db.searchByPublication(publicate);
+
+				}
+				// search by District
+				if (searchingBy.getSelectedIndex() == 4) {
+					table = db.seachByDistrict(searchText.getText());
+				}
+				// search by whether or not they're on holiday
+				if (searchingBy.getSelectedIndex() == 5) {
+					table = db.searchByOnHoliday(searchText.getText().toLowerCase());
+				}
+				// search by Billing Date
+				if (searchingBy.getSelectedIndex() == 6) {
+					table = db.searchByBillingDate(searchText.getText().toLowerCase());
+				}
+				if (table == null) {
+					String[] err = new String[] { "No results found" };
+					listResults.setListData(err);
+				} else {
+
+					String txt = ("ID  Name      Address   District");
+					ArrayList<String> nw = new ArrayList<String>();
+					nw.add(txt);
+					table.add(0, nw);
+
+					listResults.setListData(table.toArray());
+				}
+
+			}
+		});
 
 	}
+	
+	public static String cashFormatter(ArrayList<ArrayList<String>> table){
+		String output = "";
+
+		if (table == null) {
+			return "";
+		} else {
+			for (int x = 0; x < table.size(); x++) {
+
+				System.out.print("");
+
+				String name = table.get(x).get(1);
+				String id = table.get(x).get(0);
+				String distID = table.get(x).get(3); /////////                          <-------------------------------------------------------------
+				String billing = table.get(x).get(5);
+				String total = table.get(x).get(6);
+				
+				//txtpnStatus.setText("Dist  ID  Name             Billing Date  Monthly Total");
+
+				// String output = "";
+				int nameWht = 18;
+				int dateWht = 15;
+
+				if (distID.length() == 1) {
+					output = output + (" " + distID + "    ");
+				} else {
+					output = output + (distID + "    ");
+				}
+				
+				if (id.length() == 1) {
+					output = output + ("  " + id + "    ");
+				} else if(id.length() == 2){
+					output = output + (" " + id + "     ");
+				} else {
+					output = output + (id + "      ");
+				}
+
+				output = output + name;
+
+				nameWht = 18 - name.length();
+
+				for (int y = nameWht; y > 0; y--) {
+					output = output + (" ");
+				}
+				
+				output = output + billing;
+				
+				dateWht = 15 - billing.length();
+
+				for (int y = dateWht; y > 0; y--) {
+					output = output + (" ");
+				}
+
+				output = output + total + "\n";
+
+			}
+
+			return output;
+		}
+	}
+
+	public static String distFormatter(ArrayList<ArrayList<String>> table) {
+		String output = "";
+
+		if (table == null) {
+			return "";
+		} else {
+			for (int x = 0; x < table.size(); x++) {
+
+				System.out.print("");
+
+				String name = table.get(x).get(1);
+				String address = table.get(x).get(2);
+				String distID = table.get(x).get(3);
+				String pubs = table.get(x).get(7);
+				
+				
+
+				// String output = "";
+				int nameWht = 20;
+				int addWht = 20;
+
+				if (distID.length() == 1) {
+					output = output + (" " + distID + "    ");
+				} else {
+					output = output + (distID + "    ");
+				}
+
+				output = output + (address);
+
+				addWht = 20 - address.length();
+
+				for (int y = addWht; y > 0; y--) {
+					output = output + (" ");
+				}
+
+				output = output + name;
+
+				nameWht = 20 - name.length();
+
+				for (int y = nameWht; y > 0; y--) {
+					output = output + (" ");
+				}
+
+				output = output + (pubs) +"\n";
+
+			}
+
+			return output;
+		}
+	}
+
 }
