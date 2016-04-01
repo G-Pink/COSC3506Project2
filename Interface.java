@@ -237,6 +237,13 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		searchText = new JTextField();
+		searchText.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				searchText.setText("");
+			}
+		});
 		searchText.setText("search");
 		searchText.setBounds(10, 11, 221, 20);
 		panel_1.add(searchText);
@@ -713,6 +720,7 @@ public class Interface extends JFrame {
 					ArrayList<String> res = db.searchByCustomerID(index);
 					System.out.println(res);
 					System.out.println("Double clicked on Item " + index);
+					db.updateMonthlyTotal(res.get(0));
 					tabbedPane.setSelectedIndex(2);
 					idLabel.setText(res.get(0));
 					nameText.setText(res.get(1));
