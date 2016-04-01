@@ -19,6 +19,7 @@ import javax.swing.DefaultComboBoxModel;
 
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.AbstractListModel;
 import javax.swing.JCheckBox;
 import javax.swing.SwingConstants;
@@ -136,7 +137,7 @@ public class Interface extends JFrame {
 		panel.add(mnuReport);
 
 		/*----------------------------------------------
-		 * Print Button
+		 * Display Button
 		 ----------------------------------------------*/
 
 		JButton btnDisplay = new JButton("Display");
@@ -187,6 +188,37 @@ public class Interface extends JFrame {
 		});
 		btnDisplay.setBounds(218, 7, 89, 23);
 		panel.add(btnDisplay);
+		
+		
+		/*----------------------------------------------
+		 * Print Button
+		 ----------------------------------------------*/
+
+		
+		JButton btnPrint = new JButton("Print");
+		btnPrint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try{
+					boolean complete =  txtpnStatus.print();
+					
+					if(complete) {
+						JOptionPane.showMessageDialog(null, "Done Printing", "Information" , JOptionPane.INFORMATION_MESSAGE);
+					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Printing Cancelled", "Printer" , JOptionPane.ERROR_MESSAGE);
+					}
+					
+				}
+				catch(PrinterException re){
+					JOptionPane.showMessageDialog(null, re);
+				}
+				
+			}
+		});
+		btnPrint.setBounds(352, 7, 89, 23);
+		panel.add(btnPrint);
 
 		/*
 		 * ===============================================
