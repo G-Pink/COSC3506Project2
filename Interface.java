@@ -498,6 +498,10 @@ public class Interface extends JFrame {
 				if(chckbxOnHoliday.isSelected()){
 					db.addOnHoliday(idLabel.getText(), textEndHoliday.getText());
 				}
+				else
+				{
+					db.deleteOnHoliday(idLabel.getText());
+				}
 				
 				db.updateMonthlyTotal(idLabel.getText());
 				
@@ -634,6 +638,7 @@ public class Interface extends JFrame {
 				// Search by ID
 				if (searchingBy.getSelectedIndex() == 1) {
 
+					table.clear();
 					ArrayList<String> qqq = db.searchByCustomerID(searchText.getText());
 					table.add(qqq);
 
