@@ -478,13 +478,13 @@ public class Interface extends JFrame {
 			c2 = '1';
 		}
 		if (chckbxP3.isSelected()) {
-			c1 = '1';
+			c3 = '1';
 		}
 		if (chckbxP4.isSelected()) {
-			c1 = '1';
+			c4 = '1';
 		}
 		
-		final String btws = (""+c1+c2+c3+c4);
+		String btws = (""+c1+c2+c3+c4);
 
 		/*----------------------------------------------
 		 * Save customer changes button
@@ -493,6 +493,7 @@ public class Interface extends JFrame {
 		JButton btnSaveMe = new JButton("Save");
 		btnSaveMe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ArrayList<String> data = db.searchByCustomerID(idLabel.getText());
 				
 				//name
 				db.editCustomerName(idLabel.getText(), nameText.getText());
@@ -510,23 +511,42 @@ public class Interface extends JFrame {
 					db.deleteOnHoliday(idLabel.getText());
 				}
 				
-				db.updateMonthlyTotal(idLabel.getText());
+				
 				
 				//publication
-				if (chckbxP1.isSelected() && btws.charAt(0) == '1') {
+				if (chckbxP1.isSelected() && data.get(7).charAt(0) == '0') {
 					db.editSubscription(idLabel.getText(), "0");
 
 				}
-				if (chckbxP2.isSelected()&& btws.charAt(1) == '1') {
+				else if (!chckbxP1.isSelected() && data.get(7).charAt(0) == '1') {
+					db.editSubscription(idLabel.getText(), "0");
+
+				}
+				if (chckbxP2.isSelected()&& data.get(7).charAt(1) == '0') {
 					db.editSubscription(idLabel.getText(), "1");
 				}
-				if (chckbxP3.isSelected()&& btws.charAt(2) == '1'){
+				else if (!chckbxP2.isSelected()&&data.get(7).charAt(1) == '1') {
+					db.editSubscription(idLabel.getText(), "1");
+				}
+				if (chckbxP3.isSelected()&& data.get(7).charAt(2) == '0'){
 					db.editSubscription(idLabel.getText(), "2");
 
 				}
-				if (chckbxP4.isSelected()&& btws.charAt(3) == '1') {
+				else if (!chckbxP3.isSelected()&& data.get(7).charAt(2) == '1'){
+					db.editSubscription(idLabel.getText(), "2");
+
+				}
+				if (chckbxP4.isSelected()&& data.get(7).charAt(3) == '0') {
 					db.editSubscription(idLabel.getText(), "3");
 				}
+				else if (!chckbxP4.isSelected()&& data.get(7).charAt(3) == '1') {
+					db.editSubscription(idLabel.getText(), "3");
+				}
+				
+				db.updateMonthlyTotal(idLabel.getText());
+				
+				//Save to file
+				db.closeConnection();		
 				
 			}
 		});
@@ -558,23 +578,28 @@ public class Interface extends JFrame {
 					db.addOnHoliday(newID, textEndHoliday.getText());
 				}
 				
-				db.updateMonthlyTotal(newID);
+				
 				
 				//publication
-				if (chckbxP1.isSelected() && btws.charAt(0) == '1') {
+				if (chckbxP1.isSelected() && btws.charAt(0) == '0') {
 					db.editSubscription(newID, "0");
 
 				}
-				if (chckbxP2.isSelected()&& btws.charAt(1) == '1') {
+				if (chckbxP2.isSelected()&& btws.charAt(1) == '0') {
 					db.editSubscription(newID, "1");
 				}
-				if (chckbxP3.isSelected()&& btws.charAt(2) == '1'){
+				if (chckbxP3.isSelected()&& btws.charAt(2) == '0'){
 					db.editSubscription(newID, "2");
 
 				}
-				if (chckbxP4.isSelected()&& btws.charAt(3) == '1') {
+				if (chckbxP4.isSelected()&& btws.charAt(3) == '0') {
 					db.editSubscription(newID, "3");
 				}
+				
+				db.updateMonthlyTotal(newID);
+				
+				//Save to file
+				db.closeConnection();
 			}
 		});
 		btnAddMe.setBounds(188, 267, 89, 23);
@@ -669,7 +694,7 @@ public class Interface extends JFrame {
 						publicate = "1";
 					} else if (searchText.getText().equalsIgnoreCase(chckbxP3.getText())) {
 						publicate = "2";
-					} else if (searchText.getText().equalsIgnoreCase(chckbxP3.getText())) {
+					} else if (searchText.getText().equalsIgnoreCase(chckbxP4.getText())) {
 						publicate = "3";
 					}
 
