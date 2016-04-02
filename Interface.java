@@ -87,7 +87,7 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 513, 389);
+		setBounds(100, 100, 598, 389);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -117,7 +117,7 @@ public class Interface extends JFrame {
 		panel.add(lblLog);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 70, 462, 232);
+		scrollPane_1.setBounds(10, 70, 547, 232);
 		panel.add(scrollPane_1);
 
 		JTextPane txtpnStatus = new JTextPane();
@@ -148,16 +148,25 @@ public class Interface extends JFrame {
 
 				if (mnuReport.getSelectedIndex() == 0) {
 
-					txtpnStatus.setText("Dist  Address             Name                Publications");
-
 					ArrayList<ArrayList<String>> dist0 = db.seachByDistrict("0");
 					ArrayList<ArrayList<String>> dist1 = db.seachByDistrict("1");
 					ArrayList<ArrayList<String>> dist2 = db.seachByDistrict("2");
 					ArrayList<ArrayList<String>> dist3 = db.seachByDistrict("3");
+					
+					int lenAddress = getLongest(2, dist0, dist1, dist2, dist3) + 1;
+					int lenName = getLongest(1, dist0, dist1, dist2, dist3) + 1;
+					
+					String temp1 = "Address";
+					String temp2 = "Name";
+					
+					temp1 = lengthen(temp1, lenAddress);
+					temp2 = lengthen(temp2, lenName);
+					
+					txtpnStatus.setText("Dist  " + temp1 + "" + temp2 + "Publications");
 
 					String output = " ";
-					output = (distFormatter(dist0) + "\n" + distFormatter(dist1) + "\n" + distFormatter(dist2) + "\n"
-							+ distFormatter(dist3) + "\n");
+					output = (distFormatter(dist0, lenAddress, lenName) + "\n" + distFormatter(dist1, lenAddress, lenName) + "\n" + distFormatter(dist2, lenAddress, lenName) + "\n"
+							+ distFormatter(dist3, lenAddress, lenName) + "\n");
 
 					txtpnStatus.setText(txtpnStatus.getText() + "\n" + output);
 
@@ -171,16 +180,22 @@ public class Interface extends JFrame {
 					// Print all customer billing information by district
 					// (Name, monthly amount, billing date, address, district)
 					
-					txtpnStatus.setText("Dist    ID   Name             Billing Date    Monthly Total");
-					
 					ArrayList<ArrayList<String>> dist0 = db.seachByDistrict("0");
 					ArrayList<ArrayList<String>> dist1 = db.seachByDistrict("1");
 					ArrayList<ArrayList<String>> dist2 = db.seachByDistrict("2");
 					ArrayList<ArrayList<String>> dist3 = db.seachByDistrict("3");
 					
+					int lenName = getLongest(1, dist0, dist1, dist2, dist3) + 1;
+					
+					String temp = "Name";
+					
+					temp = lengthen(temp, lenName);
+					
+					txtpnStatus.setText("Dist    ID   " + temp + "Billing Date    Monthly Total");
+					
 					String output = " ";
-					output = (cashFormatter(dist0) + "\n" + cashFormatter(dist1) + "\n" + cashFormatter(dist2) + "\n"
-							+ cashFormatter(dist3) + "\n");
+					output = (cashFormatter(dist0, lenName) + "\n" + cashFormatter(dist1, lenName) + "\n" + cashFormatter(dist2, lenName) + "\n"
+							+ cashFormatter(dist3, lenName) + "\n");
 					
 					txtpnStatus.setText(txtpnStatus.getText() + "\n" + output);
 				}
@@ -264,14 +279,14 @@ public class Interface extends JFrame {
 		 ----------------------------------------------*/
 
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 42, 462, 260);
+		scrollPane.setBounds(10, 42, 547, 260);
 		panel_1.add(scrollPane);
 
 		JList listResults = new JList();
 		listResults.setFont(new Font("Courier New", Font.PLAIN, 11));
 		scrollPane.setViewportView(listResults);
 		listResults.setModel(new AbstractListModel() {
-			String[] values = new String[] { "customer 1", "customer 2" };
+			String[] values = new String[] {  };
 
 			public int getSize() {
 				return values.length;
@@ -744,56 +759,57 @@ public class Interface extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					int indx = listResults.locationToIndex(e.getPoint());
-					System.out.print(indx);
-					System.out.print(table.get(indx));
-					ArrayList<String> idex = table.get(indx);
-					String index = idex.get(0);		
 					
-					ArrayList<String> res = db.searchByCustomerID(index);
-					System.out.println(res);
-					System.out.println("Double clicked on Item " + index);
-					db.updateMonthlyTotal(res.get(0));
-					tabbedPane.setSelectedIndex(2);
-					idLabel.setText(res.get(0));
-					nameText.setText(res.get(1));
-					addressText.setText(res.get(2));
-					districtText.setText(res.get(3));
-					chckbxOnHoliday.setSelected(Boolean.parseBoolean(res.get(4)));
-					lblBillingDate.setText(res.get(5));
-					lblTotalValue.setText(res.get(6));
+						System.out.print(indx);
+						System.out.print(table.get(indx));
+						ArrayList<String> idex = table.get(indx);
+						String index = idex.get(0);		
+					
+						ArrayList<String> res = db.searchByCustomerID(index);
+						System.out.println(res);
+						System.out.println("Double clicked on Item " + index);
+						db.updateMonthlyTotal(res.get(0));
+						tabbedPane.setSelectedIndex(2);
+						idLabel.setText(res.get(0));
+						nameText.setText(res.get(1));
+						addressText.setText(res.get(2));
+						districtText.setText(res.get(3));
+						chckbxOnHoliday.setSelected(Boolean.parseBoolean(res.get(4)));
+						lblBillingDate.setText(res.get(5));
+						lblTotalValue.setText(res.get(6));
 
-					if (res.get(7).charAt(0) == '1') {
-						chckbxP1.setSelected(true);
-					} else {
-						chckbxP1.setSelected(false);
+						if (res.get(7).charAt(0) == '1') {
+							chckbxP1.setSelected(true);
+						} else {
+							chckbxP1.setSelected(false);
+						}
+						if (res.get(7).charAt(1) == '1') {
+							chckbxP2.setSelected(true);
+						} else {
+							chckbxP2.setSelected(false);
+						}
+						if (res.get(7).charAt(2) == '1') {
+							chckbxP3.setSelected(true);
+						} else {
+							chckbxP3.setSelected(false);
+						}
+						if (res.get(7).charAt(3) == '1') {
+							chckbxP4.setSelected(true);
+						} else {
+							chckbxP4.setSelected(false);
+						}
+						
+						textEndHoliday.setText(res.get(8));
+						}
 					}
-					if (res.get(7).charAt(1) == '1') {
-						chckbxP2.setSelected(true);
-					} else {
-						chckbxP2.setSelected(false);
-					}
-					if (res.get(7).charAt(2) == '1') {
-						chckbxP3.setSelected(true);
-					} else {
-						chckbxP3.setSelected(false);
-					}
-					if (res.get(7).charAt(3) == '1') {
-						chckbxP4.setSelected(true);
-					} else {
-						chckbxP4.setSelected(false);
-					}
-
-					textEndHoliday.setText(res.get(8));
-
-				}
-			}
-		};
+				
+			};
 
 		listResults.addMouseListener(mouseListener);
 
 	}
 	
-	public static String cashFormatter(ArrayList<ArrayList<String>> table){
+	public static String cashFormatter(ArrayList<ArrayList<String>> table, int lenN){
 		String output = "";
 
 		if (table == null) {
@@ -812,7 +828,7 @@ public class Interface extends JFrame {
 				//txtpnStatus.setText("Dist  ID  Name             Billing Date  Monthly Total");
 
 				// String output = "";
-				int nameWht = 18;
+				int nameWht = lenN;
 				int dateWht = 15;
 
 				if (distID.length() == 1) {
@@ -824,14 +840,14 @@ public class Interface extends JFrame {
 				if (id.length() == 1) {
 					output = output + ("  " + id + "    ");
 				} else if(id.length() == 2){
-					output = output + (" " + id + "     ");
+					output = output + ("  " + id + "   ");
 				} else {
-					output = output + (id + "      ");
+					output = output + ("  " + id + "  ");
 				}
 
 				output = output + name;
 
-				nameWht = 18 - name.length();
+				nameWht -= name.length();
 
 				for (int y = nameWht; y > 0; y--) {
 					output = output + (" ");
@@ -845,7 +861,7 @@ public class Interface extends JFrame {
 					output = output + (" ");
 				}
 
-				output = output + total + "\n";
+				output = String.format(""+ output + " $%.2f\n", Double.parseDouble(total));
 
 			}
 
@@ -853,7 +869,7 @@ public class Interface extends JFrame {
 		}
 	}
 
-	public static String distFormatter(ArrayList<ArrayList<String>> table) {
+	public static String distFormatter(ArrayList<ArrayList<String>> table, int lenA, int lenN) {
 		String output = "";
 
 		if (table == null) {
@@ -871,8 +887,8 @@ public class Interface extends JFrame {
 				
 
 				// String output = "";
-				int nameWht = 20;
-				int addWht = 20;
+				int nameWht = lenN;
+				int addWht = lenA;
 
 				if (distID.length() == 1) {
 					output = output + (" " + distID + "    ");
@@ -882,7 +898,7 @@ public class Interface extends JFrame {
 
 				output = output + (address);
 
-				addWht = 20 - address.length();
+				addWht -= address.length();
 
 				for (int y = addWht; y > 0; y--) {
 					output = output + (" ");
@@ -890,7 +906,7 @@ public class Interface extends JFrame {
 
 				output = output + name;
 
-				nameWht = 20 - name.length();
+				nameWht -= name.length();
 
 				for (int y = nameWht; y > 0; y--) {
 					output = output + (" ");
@@ -902,5 +918,27 @@ public class Interface extends JFrame {
 
 			return output;
 		}
+	}
+	
+	public static int getLongest(int loc, ArrayList<ArrayList<String>>... tabs){//Returns the longest string's length
+		int longest = 0;
+		
+		for(int i = 0; i < tabs.length; i++){
+			for(int j = 0; j < tabs[i].size(); j++){
+				if(tabs[i].get(j).get(loc).length() > longest){
+					longest = tabs[i].get(j).get(loc).length();
+				}
+			}
+		}
+		
+		return longest;
+	}
+	
+	public static String lengthen(String str, int size){//Adds whitespace to str to make its length equal size
+		for(int i = str.length(); i < size; i++){
+			str = str + " ";
+		}
+		
+		return str;
 	}
 }
