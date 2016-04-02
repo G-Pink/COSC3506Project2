@@ -692,9 +692,10 @@ public class Interface extends JFrame {
 				// Search by ID
 				if (searchingBy.getSelectedIndex() == 1) {
 
-					table.clear();
-					ArrayList<String> qqq = db.searchByCustomerID(searchText.getText());
-					table.add(qqq);
+					
+					ArrayList<ArrayList<String>> qqq = new ArrayList<ArrayList<String>>();
+					qqq.add(db.searchByCustomerID(searchText.getText()));
+					table = qqq;
 
 				}
 
@@ -757,7 +758,7 @@ public class Interface extends JFrame {
 
 		MouseAdapter mouseListener = new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
+				if (e.getClickCount() == 2 && table.size() > 0) {
 					int indx = listResults.locationToIndex(e.getPoint());
 					
 						System.out.print(indx);
