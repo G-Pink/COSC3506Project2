@@ -633,6 +633,7 @@ public class Interface extends JFrame {
 		btnClear.setBounds(339, 11, 89, 23);
 		panel_2.add(btnClear);
 		btnClear.addActionListener(new ActionListener() {
+			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
 
 				//id
@@ -646,7 +647,13 @@ public class Interface extends JFrame {
 				chckbxP3.setSelected(false);
 				chckbxP4.setSelected(false);
 				
-			
+				Date now = new Date();
+				if(now.getMonth() == 11){
+					lblBillingDate.setText("1-" + now.getDate() + "-" + (now.getYear() + 1901));
+				}
+				else{
+					lblBillingDate.setText((now.getMonth() + 2) + "-" + now.getDate() + "-" + (now.getYear() + 1900));
+				}
 			}
 		});
 		
