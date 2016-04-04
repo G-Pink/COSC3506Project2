@@ -632,6 +632,7 @@ public class Interface extends JFrame {
 
 
 				db.deleteCustomer(idLabel.getText());
+				db.closeConnection();
 
 			}
 		});
